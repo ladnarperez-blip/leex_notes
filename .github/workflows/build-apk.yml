@@ -26,26 +26,16 @@ jobs:
         with:
           channel: 'stable'
 
-      - name: Crear archivos base de Flutter
+      - name: Crear proyecto Flutter base
         run: |
-          cat << 'EOF' > pubspec.yaml
-          name: leex_notes
-          description: "LEEX Notes App"
-          publish_to: 'none'
-          version: 1.0.0+1
-          environment:
-            sdk: '>=3.0.0 <4.0.0'
-          dependencies:
-            flutter:
-              sdk: flutter
-            cupertino_icons: ^1.0.6
-          dev_dependencies:
-            flutter_test:
-              sdk: flutter
-            flutter_lints: ^3.0.0
-          flutter:
-            uses-material-design: true
-          EOF
+          flutter create . --project-name=leex_notes --org=com.kahleex
+          cp lib/main.dart /tmp/main.dart.bak || true
+
+      - name: Restaurar main.dart
+        run: |
+          if [ -f /tmp/main.dart.bak ]; then
+            cp /tmp/main.dart.bak lib/main.dart
+          fi
 
       - name: Instalar dependencias
         run: flutter pub get
